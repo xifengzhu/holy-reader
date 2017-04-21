@@ -1,0 +1,72 @@
+.book-title {
+  position: fixed;
+  font-size: 26rpx;
+  background-color:rgb(173, 200, 169);
+  padding:20rpx;
+  color:#333;
+  width: 100%;
+}
+.content {
+  font-size:30rpx;
+  line-height:60rpx;
+  background: rgb(173, 200, 169);
+  padding: 80rpx 20rpx 100rpx;
+}
+
+.tools {
+  background: #191919;
+  padding: 10px 0px;
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  display: flex;
+  color: #fff;
+  text-align: center;
+  justify-content: space-around;
+  font-size:30rpx;
+}
+
+.list-modal {
+  line-height: 130rpx;
+  border-radius:20rpx;
+  background-color: white;
+  color: black;
+  font-size: 26rpx;
+  text-align: left;
+  position: fixed;
+  z-index: 9999;
+  top:5%;
+  width:90%;
+  left:5%;
+  height:80%;
+  overflow:scroll;
+  .item {
+    height:60rpx;
+    border-bottom:1px solid #eee;
+    line-height:52rpx;
+    padding:20rpx;
+  }
+}
+
+.chapter-tools {
+  display: flex;
+  flex-direction:row;
+  text-align: center;
+  margin-top: 20rpx;
+  text {
+    width: 50%;
+    font-size: 30rpx;
+  }
+}
+
+.name {
+  font-size:30rpx;
+  display:block;
+  height:34rpx;
+}
+
+.last-chapter {
+  font-size:22rpx;
+  margin: 0rpx;
+  color:#999;
+}

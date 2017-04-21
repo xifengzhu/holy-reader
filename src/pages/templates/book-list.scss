@@ -1,0 +1,33 @@
+.list {
+  height: 100%;
+  margin-top: 90rpx;
+  .item {
+    display: flex;
+    padding: 20rpx 40rpx;
+    border-bottom: 1rpx solid #eee;
+    cursor: pointer;
+    .cover {
+      width: 150rpx;
+      height: 225rpx;
+      margin-right: 20rpx;
+    }
+    .meta {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      .title,
+      .sub-title {
+        display: block;
+        margin-bottom: 15rpx;
+      }
+      .title {
+        font-size: 32rpx;
+      }
+      .sub-title {
+        font-size: 22rpx;
+        color: #c0c0c0;
+      }
+    }
+  }
+}

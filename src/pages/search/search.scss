@@ -1,0 +1,40 @@
+@import "../templates/book-list";
+
+.search {
+  width: 100%;
+  padding: 20rpx 0rpx;
+  color: #666;
+  font-size: 30rpx;
+  text-align: center;
+  border-bottom: 1rpx solid #eee;
+  position:fixed;
+  top:0px;
+  z-index:9999;
+  background-color: white;
+}
+
+.clear-history {
+  font-size:24rpx;
+  vertical-align:top;
+  text-align:center;
+  width:100%;
+  display:block;
+}
+
+.tag {
+  padding:20px;
+  margin-top: 88rpx;
+  font-size:24rpx;
+  .title {
+    display:block;
+    font-size:30rpx;
+    margin-bottom:30rpx;
+  }
+  .tag-item {
+    padding:8rpx 12rpx;
+    border-radius:9rpx;
+    margin:0 20rpx 20rpx 0;
+    display:inline-block;
+    color:white;
+  }
+}

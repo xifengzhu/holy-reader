@@ -1,0 +1,19 @@
+@import "../templates/book-list";
+
+.search {
+  width: 100%;
+  padding: 20rpx 0rpx;
+  color: #666;
+  font-size: 30rpx;
+  text-align: center;
+  border-bottom: 1rpx solid #eee;
+  position:fixed;
+  top:0px;
+  z-index:9999;
+  background-color: white;
+}
+
+.empty {
+  width: 100%;
+  margin-top: 100rpx;
+}
