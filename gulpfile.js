@@ -42,8 +42,8 @@ gulp.task('clean', () => {
 
 gulp.task('generate', () => {
   fs.mkdir(`src/pages/${argv.page}`);
-  fs.writeFileSync(`src/pages/${argv.page}/${argv.page}.js`, "");
-  fs.writeFileSync(`src/pages/${argv.page}/${argv.page}.json`, "");
+  fs.writeFileSync(`src/pages/${argv.page}/${argv.page}.js`, "Page({})");
+  fs.writeFileSync(`src/pages/${argv.page}/${argv.page}.json`, "{}");
   fs.writeFileSync(`src/pages/${argv.page}/${argv.page}.wxml`, "");
   fs.writeFileSync(`src/pages/${argv.page}/${argv.page}.scss`, "");
 });
