@@ -25,6 +25,15 @@ var handleError = function(err) {
   gutil.log('lineNumber: ' + colors.red(err.lineNumber))
   gutil.log('message: ' + err.message)
   gutil.log('plugin: ' + colors.yellow(err.plugin))
+
+
+  /* http://stackoverflow.com/questions/23971388/prevent-errors-from-breaking-crashing-gulp-watch
+     https://github.com/gulpjs/gulp/issues/259
+
+     错误处理回调函数，报错的时候不会停止`gulp watch`
+  */
+
+  this.emit('end')
 };
 
 gulp.task('clean', () => {
@@ -129,10 +138,9 @@ gulp.task('scripts', () => {
   return gulp.src('./src/**/**/*.js')
     .pipe(babel({
       presets: ['es2015']
-    }))
+    }).on('error', handleError))
     .pipe(gulp.dest('./dist'))
 })
-
 // gulp.task('scriptsPro', () => {
 //   return gulp.src('./src/**/**/*.js')
 //     .pipe(babel({
