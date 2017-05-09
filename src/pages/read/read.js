@@ -28,7 +28,7 @@ Page({
     if(extra){
       this.setData({book: book});
       this.getChapterContent(extra.readIndex || 0);
-      if(new Date(params.lastUpdated) > new Date(book.updated)) {
+      if(params.lastUpdated != book.updated) {
         this.getNewestChapters();
       }
     } else {
