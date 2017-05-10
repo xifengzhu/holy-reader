@@ -28,7 +28,7 @@ export function fetchBook(id) {
 // GET api.zhuishushenqi.com/toc?view=summary&book=57206c3539a913ad65d35c7b
 export function fetchBookSource(id) {
   const url = `${URI}/toc`;
-  const params = { view: "summary", book: id };
+  const params = { view: 'summary', book: id };
   return request(url, params).then(response => response.data);
 }
 
@@ -36,14 +36,14 @@ export function fetchBookSource(id) {
 // GET api.zhuishushenqi.com/toc/577b477dbd86a4bd3f8bf1b2?view=chapters
 export function fetchChapters(id) {
   const url = `${URI}/toc/${id}`;
-  const params = { view: "chapters"};
+  const params = { view: 'chapters'};
   return request(url, params).then(response => response.data);
 }
 
 // 章节
 // GET chapter2.zhuishushenqi.com/chapter/http%3a%2f%2fbook.my716.com%2fgetBooks.aspx%3fmethod%3dcontent%26bookId%3d1127281%26chapterFile%3dU_1212539_201701211420571844_4093_2.txt?k=2124b73d7e2e1945&t=1468223717
 export function fetchChapter(link) {
-  const newURI = "https://chapter2.zhuishushenqi.com";
+  const newURI = 'https://chapter2.zhuishushenqi.com';
   const url = `${newURI}/chapter/${link}`;
   const params = { k: '2124b73d7e2e1945', t: '1468223717'};
   return request(url, params).then(response => response.data);

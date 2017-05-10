@@ -1,24 +1,25 @@
-var gulp = require('gulp');
-var del = require('del');
-var path = require('path');
-var autoprefixer = require('gulp-autoprefixer');
-var htmlmin = require('gulp-htmlmin');
-var sass = require('gulp-sass');
-var jsonminify = require('gulp-jsonminify2');
-var gutil = require('gulp-util');
-var combiner = require('stream-combiner2');;
-var babel = require('gulp-babel');
-var uglify = require('gulp-uglify');
-var rename = require("gulp-rename")
-var minifycss = require('gulp-minify-css');
-var runSequence = require('run-sequence');
-var jsonlint = require("gulp-jsonlint");
-var fs = require('fs');
-var argv = require('yargs').argv;
-var watch = require('gulp-watch');
+const gulp = require('gulp');
+const del = require('del');
+const path = require('path');
+const autoprefixer = require('gulp-autoprefixer');
+const htmlmin = require('gulp-htmlmin');
+const sass = require('gulp-sass');
+const jsonminify = require('gulp-jsonminify2');
+const gutil = require('gulp-util');
+const combiner = require('stream-combiner2');;
+const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
+const rename = require("gulp-rename")
+const minifycss = require('gulp-minify-css');
+const runSequence = require('run-sequence');
+const jsonlint = require("gulp-jsonlint");
+const fs = require('fs');
+const argv = require('yargs').argv;
+const watch = require('gulp-watch');
+const eslint = require('gulp-eslint');
 
-var colors = gutil.colors;
-var handleError = function(err) {
+const colors = gutil.colors;
+const handleError = function(err) {
   console.log('\n')
   gutil.log(colors.red('Error!'))
   gutil.log('fileName: ' + colors.red(err.fileName))
@@ -54,12 +55,12 @@ gulp.task('watch', () => {
   watch('./src/**/**/*.wxml', () => { runSequence('templates')});
   watch('./src/**/**/*.wxss', () => { runSequence('wxss')});
   watch('./src/**/**/*.scss', () => { runSequence('wxss')});
-  watch('./src/**/**/*.js', () => { runSequence('scripts')});
+  watch('./src/**/**/*.js', () => { runSequence(['lint', 'scripts']) });
   watch('./src/*.*').pipe(gulp.dest('./dist'));
 });
 
 gulp.task('jsonLint', () => {
-  var combined = combiner.obj([
+  const combined = combiner.obj([
     gulp.src(['./src/**/**/*.json']),
     jsonlint(),
     jsonlint.reporter(),
@@ -74,12 +75,6 @@ gulp.task('json', ['jsonLint'], () => {
     .pipe(gulp.dest('./dist'))
 })
 
-// gulp.task('jsonPro', ['jsonLint'], () => {
-//   return gulp.src('./src/**/**/*.json')
-//     .pipe(jsonminify())
-//     .pipe(gulp.dest('./dist'))
-// })
-
 gulp.task('images', () => {
   return gulp.src('./src/images/**')
     .pipe(gulp.dest('./dist/images'))
@@ -90,18 +85,8 @@ gulp.task('templates', () => {
     .pipe(gulp.dest('./dist'))
 })
 
-// gulp.task('templatesPro', () => {
-//   return gulp.src('./src/**/**/*.wxml')
-//     .pipe(htmlmin({
-//       collapseWhitespace: true,
-//       removeComments: true,
-//       keepClosingSlash: true
-//     }))
-//     .pipe(gulp.dest('./dist'))
-// });
-
 gulp.task('wxss', () => {
-  var combined = combiner.obj([
+  const combined = combiner.obj([
     gulp.src(['./src/**/**/*.{wxss,scss}', '!./src/styles/**']),
     sass().on('error', sass.logError),
     autoprefixer([
@@ -109,7 +94,6 @@ gulp.task('wxss', () => {
       'Android >= 4.1'
     ]),
     rename((path) => {
-      console.log(path)
       path.extname = '.wxss'
     }),
     gulp.dest('./dist')
@@ -118,21 +102,6 @@ gulp.task('wxss', () => {
   combined.on('error', handleError);
 });
 
-// gulp.task('wxssPro', () => {
-//   var combined = combiner.obj([
-//     gulp.src(['./src/**/**/*.{wxss,scss}', '!./src/styles/**']),
-//     sass().on('error', sass.logError),
-//     autoprefixer([
-//       'iOS >= 8',
-//       'Android >= 4.1'
-//     ]),
-//     minifycss(),
-//     rename((path) => path.extname = '.wxss'),
-//     gulp.dest('./dist')
-//   ]);
-
-//   combined.on('error', handleError);
-// });
 
 gulp.task('scripts', () => {
   return gulp.src('./src/**/**/*.js')
@@ -141,16 +110,23 @@ gulp.task('scripts', () => {
     }).on('error', handleError))
     .pipe(gulp.dest('./dist'))
 })
-// gulp.task('scriptsPro', () => {
-//   return gulp.src('./src/**/**/*.js')
-//     .pipe(babel({
-//       presets: ['es2015']
-//     }))
-//     .pipe(uglify({
-//       compress: true,
-//     }))
-//     .pipe(gulp.dest('./dist'))
-// })
+
+gulp.task('lint', () => {
+  // ESLint ignores files with "node_modules" paths.
+  // So, it's best to have gulp ignore the directory as well.
+  // Also, Be sure to return the stream from the task;
+  // Otherwise, the task may end before the stream has finished.
+  return gulp.src(['src/**/*.js','!node_modules/**', '!dist/*', '!src/utils/timeago.js', '!src/images/*'])
+    // eslint() attaches the lint output to the "eslint" property
+    // of the file object so it can be used by other modules.
+    .pipe(eslint())
+    // eslint.format() outputs the lint results to the console.
+    // Alternatively use eslint.formatEach() (see Docs).
+    .pipe(eslint.format())
+    // To have the process exit with an error code (1) on
+    // lint error, return the stream and pipe to failAfterError last.
+    // .pipe(eslint.failAfterError());
+})
 
 gulp.task('dev', ['clean'], () => {
   runSequence('json',
@@ -158,17 +134,74 @@ gulp.task('dev', ['clean'], () => {
     'templates',
     'wxss',
     'scripts',
+    'lint',
     'watch');
+})
+
+// ================ for production configure =======================
+// ================ run gulp build =================================
+
+gulp.task('jsonPro', ['jsonLint'], () => {
+  return gulp.src('./src/**/**/*.json')
+    .pipe(jsonminify())
+    .pipe(gulp.dest('./dist'))
+})
+
+gulp.task('templatesPro', () => {
+  return gulp.src('./src/**/**/*.wxml')
+    .pipe(htmlmin({
+      collapseWhitespace: true,
+      removeComments: true,
+      keepClosingSlash: true
+    }))
+    .pipe(gulp.dest('./dist'))
 });
 
-// gulp.task('build', [
-//   'jsonPro',
-//   'images',
-//   'templatesPro',
-//   'wxssPro',
-//   'scriptsPro'
-// ]);
 
-// gulp.task('pro', ['clean'], () => {
-//   runSequence('build');
-// })
+gulp.task('scriptsPro', ['lint'], () => {
+  return gulp.src('./src/**/**/*.js')
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(uglify({
+      compress: true,
+    }))
+    .pipe(gulp.dest('./dist'))
+})
+
+gulp.task('wxssPro', () => {
+  const combined = combiner.obj([
+    gulp.src(['./src/**/**/*.{wxss,scss}', '!./src/styles/**']),
+    sass().on('error', sass.logError),
+    autoprefixer([
+      'iOS >= 8',
+      'Android >= 4.1'
+    ]),
+    minifycss(),
+    rename((path) => path.extname = '.wxss'),
+    gulp.dest('./dist')
+  ]);
+
+  combined.on('error', handleError);
+});
+
+
+gulp.task('dev', ['clean'], () => {
+  runSequence('json',
+    'images',
+    'templates',
+    'wxss',
+    'scripts',
+    'lint',
+    'watch');
+})
+
+gulp.task('build', ['clean'], () => [
+  runSequence(
+    'jsonPro',
+    'images',
+    'templatesPro',
+    'wxssPro',
+    'scriptsPro'
+  )
+]);

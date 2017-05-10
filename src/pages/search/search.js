@@ -17,7 +17,7 @@ Page({
       return { color: getRandomColor(), word: search };
     });
     this.setData({searches: searches});
-    console.log("onLoad");
+    // console.log("onLoad");
   },
 
   bindHideKeyboard: function(e) {
@@ -27,7 +27,7 @@ Page({
 
   autoComplete: function(e){
     const query = e.detail.value;
-    if (!query) return;
+    if (!query) { return };
     app.Api.fetchAutoComplete(query)
       .then((response) => {
         console.log(response);
@@ -36,7 +36,7 @@ Page({
 
   search: function(e) {
     const query = e.detail.value || e.currentTarget.dataset.query;
-    if (!query) return;
+    if (!query) { return };
     this.setData({ loading: true });
     this.logSearch(query);
     app.Api.fetchSearch(query)
@@ -51,7 +51,7 @@ Page({
 
   logSearch: function(word){
     const searchArray = wx.getStorageSync('searches') || [];
-    if(searchArray.indexOf(word) == -1){
+    if(searchArray.indexOf(word) === -1){
       searchArray.unshift(word);
       wx.setStorageSync('searches', searchArray);
       this.setData({searches: wx.getStorageSync('searches')});

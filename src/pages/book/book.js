@@ -13,7 +13,6 @@ Page({
   onLoad: function (params) {
     const timeagoInstance = timeago();
     this.setData({ loading: true });
-    let inshelf = false;
     app.Api.fetchBook(params.id)
       .then(response => {
         response.cover = formatImageUrl(response.cover);
@@ -24,7 +23,7 @@ Page({
           });
         }
         const value = wx.getStorageSync(response._id);
-        const inshelf = !!value ? true : false;
+        const inshelf = value ? true : false;
         this.setData({book: response, loading: false, inshelf: inshelf});
         wx.setNavigationBarTitle({title: response.title});
       }).catch(e => {
@@ -69,7 +68,7 @@ Page({
       desc: this.data.book.longIntro,
       success: function(res) {
         console.log(res)
-        self.showToast("分享成功");
+        self.showToast('分享成功');
       },
       fail: function(res) {
         console.log(res);
