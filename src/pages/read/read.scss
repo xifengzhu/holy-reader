@@ -1,14 +1,18 @@
+page {
+  height:100%;
+}
+
 .book-title {
   position: fixed;
-  font-size: 26rpx;
+  font-size: 30rpx;
   background-color:rgb(173, 200, 169);
   padding:20rpx;
   color:#333;
   width: 100%;
 }
 .content {
-  font-size:30rpx;
-  line-height:60rpx;
+  font-size:40rpx;
+  line-height:65rpx;
   background: rgb(173, 200, 169);
   padding: 80rpx 20rpx 100rpx;
 }

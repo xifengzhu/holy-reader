@@ -1,4 +1,4 @@
-<view>
+<view wx:if="{{ !loading }}">
   <view class="book-title">
     <text>{{ title }}</text>
   </view>
@@ -14,8 +14,9 @@
     <span bindtap="showSources">换源</span>
     <span bindtap="showChapters">目录</span>
   </view>
-  <loading hidden="{{ !loading }}">加载中...</loading>
 </view>
+<loading hidden="{{ !loading }}">加载中...</loading>
+
 <view class="list-modal" wx:if="{{ showModal }}">
   <scroll-view scroll-y='true' class="list" style="height: 100%;" scroll-into-view="{{ toView }}">
     <view wx:if="{{ isChapterList }}" bindtap="readChapter" data-chapterIndex="{{ index }}" class="item" wx:for="{{ modalList }}" wx:key="{{ item._id }}" id="index-{{ index }}">
