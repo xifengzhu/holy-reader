@@ -4,9 +4,8 @@ const path = require('path');
 const autoprefixer = require('gulp-autoprefixer');
 const sass = require('gulp-sass');
 const gutil = require('gulp-util');
-const combiner = require('stream-combiner2');;
 const babel = require('gulp-babel');
-const rename = require("gulp-rename")
+const rename = require('gulp-rename')
 const fs = require('fs');
 const argv = require('yargs').argv;
 const chokidar = require('chokidar');
@@ -38,19 +37,21 @@ const getBuildCopyPath = (src) => {
 
 // sassCompile
 const sassCompile = (src, dest = './dist') => {
-  const combined = combiner.obj([
-    gulp.src(src),
-    sass().on('error', sass.logError),
-    autoprefixer([
-      'iOS >= 8',
-      'Android >= 4.1'
-    ]),
-    rename((path) => {
-      path.extname = '.wxss'
-    }),
-  ]).pipe(gulp.dest(dest))
-  combined.on('error', handleError);
-  return combined;
+  return gulp.src(src)
+    .pipe(sass())
+    .on('error', handleError)
+    .pipe(
+      autoprefixer([
+        'iOS >= 8',
+        'Android >= 4.1'
+      ])
+    )
+    .pipe(
+      rename((path) => {
+        path.extname = '.wxss'
+      })
+    )
+    .pipe(gulp.dest(dest))
 };
 
 const buildJs = (src, dest = './dist') => {
@@ -104,27 +105,27 @@ gulp.task('copy', gulp.series(['copy-json', 'copy-wxml', 'copy-image']));
 // watch 监听
 gulp.task('watch', () => {
   const jsWatcher = chokidar.watch('./src/**/*.js', { ignoreInitial: true });
-  const styleWatcher = chokidar.watch(['./src/**/*.scss', './src/**/*.wxss'], { ignoreInitial: true }, gulp.series('sassCompile'));
+  const styleWatcher = chokidar.watch(['./src/**/*.scss', './src/**/*.wxss'], { ignoreInitial: true });
 
   const commomWatcher = chokidar.watch(['./src/**/*.json', './src/**/*.wxml', './src/images/*'], { ignoreInitial: true });
 
   commomWatcher
-    .on("all", (event, path) => {
-      if (["change", "add"].includes(event)) {
+    .on('all', (event, path) => {
+      if (['change', 'add'].includes(event)) {
         fileCopy(path, getBuildCopyPath(path));
       }
     });
 
   styleWatcher
-    .on("all", (event, path) => {
-      if (["change", "add"].includes(event)) {
+    .on('all', (event, path) => {
+      if (['change', 'add'].includes(event)) {
         sassCompile(path, getBuildCopyPath(path));
       }
     });
 
   jsWatcher
-    .on("all", (event, path) => {
-      if (["change", "add"].includes(event)) {
+    .on('all', (event, path) => {
+      if (['change', 'add'].includes(event)) {
         lint(path);
         buildJs(path, getBuildCopyPath(path));
       }
